@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Poppins", system-ui, sans-serif;
+  --color-ivory: #F8F6F2;
+  --color-sage: #B8C9B1;
+  --color-beige: #E8DCCB;
+  --color-terracotta: #C97C5D;
+  --color-charcoal: #3F3F3F;
+}
+
+@layer base {
+  body {
+    background-color: #F8F6F2;
+    color: #3F3F3F;
+    font-family: "Poppins", sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Playfair Display", Georgia, serif;
+  }
+  
+  :focus-visible {
+    outline: 2px solid #C97C5D;
+    outline-offset: 4px;
+  }
+}
+
+/* Custom animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.float-slow {
+  animation: gentleFloat 6s ease-in-out infinite;
+}
+
+.float-slower {
+  animation: gentleFloat 8s ease-in-out infinite;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F6F2;
+}
+::-webkit-scrollbar-thumb {
+  background: #E8DCCB;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8C9B1;
+}
+
+/* Staggered load animation utilities */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Artistic Flair Theme Accents */
+.artistic-shadow {
+  box-shadow: 4px 4px 0px 0px rgba(232, 220, 203, 0.6);
+}
+
+.artistic-shadow-hover:hover {
+  box-shadow: 8px 8px 0px 0px rgba(201, 124, 93, 0.25);
+  transform: translate(-2px, -2px);
+}
+
+.artistic-double-border {
+  border: 1px solid rgba(232, 220, 203, 0.8);
+  position: relative;
+}
+
+.artistic-double-border::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1px dashed rgba(201, 124, 93, 0.3);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.artistic-glow-bg {
+  background: radial-gradient(circle, rgba(232, 220, 203, 0.4) 0%, rgba(248, 246, 242, 0) 70%);
+}
+
+.artistic-highlight-underline {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: #C97C5D;
+}
+
