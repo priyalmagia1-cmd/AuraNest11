@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, Map, Compass, ShieldCheck, CornerRightUp } from 'lucide-react';
+import { ArrowRight, Sparkles, Map, Compass, ShieldCheck, CornerRightUp, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Product } from '../types';
 import { PRODUCTS, TESTIMONIALS } from '../data';
@@ -38,6 +38,53 @@ export function HomeView({
     { name: 'The Living Corner', category: 'table-lamps', bg: 'bg-beige/40', desc: 'Warm ambient ceramics & statement wall art.' },
     { name: 'The Serene Bedroom', category: 'cushions', bg: 'bg-[#B8C9B1]/20', desc: 'Organic bouclé, block-prints & candles.' },
     { name: 'The Grand Entryway', category: 'mirrors', bg: 'bg-[#C97C5D]/10', desc: 'Arched brass mirrors & marble tray accents.' }
+  ];
+
+  const featuredCategories = [
+    {
+      id: 'table-lamps',
+      title: 'Artisan Lighting',
+      subtitle: 'Ceramic & Brass Illumination',
+      tag: '8+ Pieces',
+      description: 'Hand-thrown ceramic table lamps & arched floor lights creating warm, atmospheric sanctuary glow.',
+      artworkType: 'ceramic-lamp',
+      bg: 'bg-[#F6EFE6]',
+      borderColor: 'border-[#E6D8C6]',
+      hoverGlow: 'from-amber-500/10 via-terracotta/10 to-transparent'
+    },
+    {
+      id: 'cushions',
+      title: 'Hand-Block Textiles',
+      subtitle: 'Jaipur Indigo & Bouclé',
+      tag: '12+ Textiles',
+      description: 'Teakwood block-printed cushions and organic slub cotton covers crafted by master Indian artisans.',
+      artworkType: 'blockprint-cushion',
+      bg: 'bg-[#FAF0EC]',
+      borderColor: 'border-[#EBCBC0]',
+      hoverGlow: 'from-terracotta/15 via-orange-400/10 to-transparent'
+    },
+    {
+      id: 'mirrors',
+      title: 'Architectural Mirrors',
+      subtitle: 'Arched Brass & Sunburst',
+      tag: '6+ Statement Mirrors',
+      description: 'Solid brushed brass arches and hand-carved sunburst frames that expand natural room light.',
+      artworkType: 'sunburst-mirror',
+      bg: 'bg-[#EFF4EE]',
+      borderColor: 'border-[#CBDBC6]',
+      hoverGlow: 'from-emerald-700/10 via-sage/15 to-transparent'
+    },
+    {
+      id: 'accessories',
+      title: 'Sculptural Accents',
+      subtitle: 'Marble Trays & Vases',
+      tag: '15+ Accent Pieces',
+      description: 'Solid white Banswara marble trays, ceramic ribbed vases, and organic hand-poured soy candles.',
+      artworkType: 'marble-tray',
+      bg: 'bg-[#F4F1EA]',
+      borderColor: 'border-[#E0D8CB]',
+      hoverGlow: 'from-charcoal/10 via-amber-700/10 to-transparent'
+    }
   ];
 
   return (
@@ -110,7 +157,99 @@ export function HomeView({
         </div>
       </section>
 
-      {/* 2. CATEGORY MARQUEE */}
+      {/* 2. FEATURED COLLECTIONS SECTION */}
+      <section className="max-w-7xl mx-auto px-4 md:px-8" id="featured-collections-section">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-1.5 bg-terracotta/10 text-terracotta px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-mono font-bold mb-2">
+              <Sparkles size={11} />
+              <span>Curated Living Spaces</span>
+            </div>
+            <h2 className="font-serif text-3xl md:text-4xl font-extrabold text-charcoal">
+              Featured <span className="italic text-terracotta underline underline-offset-4 decoration-1 decoration-[#C97C5D]/50">Collections</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-charcoal/60 mt-1.5 max-w-xl font-sans">
+              Discover our signature artisan categories—hand-finished lighting, block-printed organic textiles, architectural mirrors, and solid marble accents.
+            </p>
+          </div>
+
+          <button
+            onClick={() => onNavigate('shop')}
+            className="group flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-terracotta hover:text-charcoal transition-colors self-start md:self-auto cursor-pointer"
+          >
+            <span>Explore All Categories</span>
+            <div className="w-7 h-7 rounded-full bg-terracotta/10 group-hover:bg-terracotta group-hover:text-white flex items-center justify-center transition-all">
+              <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </button>
+        </div>
+
+        {/* Top 4 Categories Cards with Premium Hover Animations */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {featuredCategories.map((cat, idx) => (
+            <motion.div
+              key={cat.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1, duration: 0.5 }}
+              whileHover={{ y: -8 }}
+              onClick={() => {
+                onSelectCategory(cat.id);
+                onNavigate('shop');
+              }}
+              className={`group relative rounded-3xl p-6 ${cat.bg} border ${cat.borderColor} shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[330px] overflow-hidden select-none`}
+              id={`featured-collection-card-${cat.id}`}
+            >
+              {/* Subtle Ambient Hover Glow */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${cat.hoverGlow} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl`} />
+
+              {/* Shimmer Light Bar */}
+              <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:left-[100%] transition-all duration-1000 ease-in-out pointer-events-none" />
+
+              {/* Top Badge & Action Button */}
+              <div className="relative z-10 flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-charcoal/70 bg-white/80 backdrop-blur-sm px-2.5 py-1 rounded-full border border-charcoal/10 shadow-2xs">
+                  {cat.tag}
+                </span>
+                <div className="w-8 h-8 rounded-full bg-white/90 group-hover:bg-terracotta group-hover:text-white text-charcoal flex items-center justify-center transition-all duration-300 shadow-xs">
+                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </div>
+
+              {/* Center Artwork / SVG Icon with Hover Scale & Rotation */}
+              <div className="relative z-10 my-4 py-2 flex items-center justify-center">
+                <div className="w-32 h-32 relative flex items-center justify-center">
+                  {/* Decorative background circle */}
+                  <div className="absolute inset-0 rounded-full bg-white/60 group-hover:bg-white/90 group-hover:scale-110 transition-all duration-500 shadow-inner" />
+                  <div className="relative w-24 h-24 group-hover:scale-115 group-hover:-rotate-3 transition-transform duration-500 ease-out">
+                    <AuraSVG type={cat.artworkType} className="w-full h-full object-contain" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Content */}
+              <div className="relative z-10 space-y-1.5 pt-3 border-t border-charcoal/10">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-terracotta">
+                  {cat.subtitle}
+                </span>
+                <h3 className="font-serif text-xl font-extrabold text-charcoal group-hover:text-terracotta transition-colors leading-snug">
+                  {cat.title}
+                </h3>
+                <p className="text-xs text-charcoal/65 font-sans leading-relaxed line-clamp-2">
+                  {cat.description}
+                </p>
+                <div className="pt-1.5 flex items-center gap-1 text-[11px] font-bold text-charcoal group-hover:text-terracotta transition-colors">
+                  <span className="uppercase tracking-wider font-mono text-[10px]">Explore Collection</span>
+                  <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. QUICK CATEGORY MARQUEE */}
       <section className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="text-center mb-8">
           <span className="text-xs text-charcoal/40 uppercase tracking-widest font-mono font-bold">Curated Catalog</span>
