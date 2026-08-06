@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, ShoppingBag, Star } from 'lucide-react';
+import { Heart, ShoppingBag, Star, Sparkles, Wand2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Product } from '../types';
 import { AuraSVG } from './AuraArt';
@@ -11,6 +11,7 @@ interface ProductCardProps {
   onToggleWishlist: (product: Product) => void;
   onAddToCart: (product: Product, finish: string) => void;
   onViewDetails: (product: Product) => void;
+  onOpenAIStudio?: (product: Product) => void;
 }
 
 export function ProductCard({
@@ -18,7 +19,8 @@ export function ProductCard({
   isWishlisted,
   onToggleWishlist,
   onAddToCart,
-  onViewDetails
+  onViewDetails,
+  onOpenAIStudio
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -60,25 +62,41 @@ export function ProductCard({
           )}
         </div>
 
-        {/* Wishlist Button (Heart) with subtle click bounce */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleWishlist(product);
-          }}
-          className="absolute top-3 right-3 p-2.5 rounded-full bg-ivory/80 backdrop-blur-md shadow-sm border border-charcoal/5 hover:bg-ivory hover:text-terracotta text-charcoal/70 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-terracotta z-10"
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          id={`wishlist-btn-${product.id}`}
-        >
-          <motion.div whileTap={{ scale: 1.3 }}>
-            <Heart
-              size={18}
-              fill={isWishlisted ? "#C97C5D" : "none"}
-              stroke={isWishlisted ? "#C97C5D" : "currentColor"}
-              className="transition-colors duration-200"
-            />
-          </motion.div>
-        </button>
+        {/* Wishlist & AI Studio Action Buttons */}
+        <div className="absolute top-3 right-3 flex flex-col gap-1.5 z-10">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleWishlist(product);
+            }}
+            className="p-2.5 rounded-full bg-ivory/80 backdrop-blur-md shadow-sm border border-charcoal/5 hover:bg-ivory hover:text-terracotta text-charcoal/70 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-terracotta cursor-pointer"
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            id={`wishlist-btn-${product.id}`}
+          >
+            <motion.div whileTap={{ scale: 1.3 }}>
+              <Heart
+                size={18}
+                fill={isWishlisted ? "#C97C5D" : "none"}
+                stroke={isWishlisted ? "#C97C5D" : "currentColor"}
+                className="transition-colors duration-200"
+              />
+            </motion.div>
+          </button>
+
+          {onOpenAIStudio && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenAIStudio(product);
+              }}
+              className="p-2.5 rounded-full bg-terracotta/90 text-white shadow-sm border border-amber-300/40 hover:bg-charcoal hover:scale-110 transition-all cursor-pointer"
+              title={`Generate 4K AI Photo for ${product.name}`}
+              id={`ai-studio-card-btn-${product.id}`}
+            >
+              <Sparkles size={16} className="text-amber-200" />
+            </button>
+          )}
+        </div>
 
         {/* Quick Add Overlay Slide-up (Vanish/Appear based on Hover) */}
         <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-charcoal/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pointer-events-none group-hover:pointer-events-auto">

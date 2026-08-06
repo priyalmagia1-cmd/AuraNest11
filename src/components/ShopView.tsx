@@ -10,6 +10,7 @@ interface ShopViewProps {
   onToggleWishlist: (product: Product) => void;
   onAddToCart: (product: Product, finish: string) => void;
   onViewDetails: (product: Product) => void;
+  onOpenAIStudio?: (product: Product) => void;
 }
 
 export function ShopView({
@@ -17,7 +18,8 @@ export function ShopView({
   wishlist,
   onToggleWishlist,
   onAddToCart,
-  onViewDetails
+  onViewDetails,
+  onOpenAIStudio
 }: ShopViewProps) {
   // Filters State
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
@@ -284,6 +286,7 @@ export function ShopView({
                   onToggleWishlist={onToggleWishlist}
                   onAddToCart={onAddToCart}
                   onViewDetails={onViewDetails}
+                  onOpenAIStudio={onOpenAIStudio}
                 />
               ))}
             </div>

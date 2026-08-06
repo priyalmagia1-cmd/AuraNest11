@@ -355,23 +355,75 @@ export const BLOGS: BlogPost[] = [
 
 export const TESTIMONIALS = [
   {
+    id: 't1',
     quote: "AuraNest has completely redefined how we shop for our flat in Bengaluru. The designs feel so premium and thoughtful, yet completely reasonable in price.",
-    author: "Rohan & Priyal K., Bengaluru",
-    role: "New Apartment Owners"
+    author: "Priyal & Rohan K.",
+    location: "Bengaluru",
+    role: "New Apartment Owners",
+    rating: 5,
+    verified: true,
+    productPurchased: "Botanical Line Art & Table Lamps",
+    avatarBg: "bg-terracotta/20 text-terracotta",
+    avatarInitials: "PR"
   },
   {
+    id: 't2',
     quote: "The quality of the brass floor mirror is exceptional. It stands solid in our hallway and receives compliments from every single guest.",
-    author: "Malini Sen, Mumbai",
-    role: "Interior Stylist"
+    author: "Malini Sen",
+    location: "Mumbai",
+    role: "Interior Stylist",
+    rating: 5,
+    verified: true,
+    productPurchased: "Dwara Arched Brass Floor Mirror",
+    avatarBg: "bg-amber-700/20 text-amber-800",
+    avatarInitials: "MS"
   },
   {
-    quote: "I love their commitment to natural materials. No smelly plastics — just authentic solid woods, beautiful ceramics, and pure flax linens.",
-    author: "Kabir Mehta, Delhi",
-    role: "Architect"
+    id: 't3',
+    quote: "I love their commitment to natural materials. No smelly plastics — just authentic solid woods, heavy ceramics, and pure flax linens.",
+    author: "Kabir Mehta",
+    location: "Delhi",
+    role: "Architect",
+    rating: 5,
+    verified: true,
+    productPurchased: "Nordic Silent Oak Clock",
+    avatarBg: "bg-emerald-800/20 text-emerald-800",
+    avatarInitials: "KM"
   },
   {
+    id: 't4',
     quote: "Exquisite block prints and organic textures. AuraNest brings that warm, earthy, yet editorial look that is usually so hard to source in India.",
-    author: "Siddhi Deshpande, Pune",
-    role: "Interior Enthusiast"
+    author: "Siddhi Deshpande",
+    location: "Pune",
+    role: "Interior Enthusiast",
+    rating: 5,
+    verified: true,
+    productPurchased: "Jaipur Block Print Cushions",
+    avatarBg: "bg-orange-800/20 text-orange-800",
+    avatarInitials: "SD"
+  },
+  {
+    id: 't5',
+    quote: "The Sand & Clay Table Lamp transformed our bedside ambiance completely. The ceramic weight and linen shade diffuse the warmest evening light.",
+    author: "Devika Nair",
+    location: "Hyderabad",
+    role: "Homeowner",
+    rating: 5,
+    verified: true,
+    productPurchased: "Sand & Clay Ceramic Lamp",
+    avatarBg: "bg-stone-700/20 text-stone-800",
+    avatarInitials: "DN"
+  },
+  {
+    id: 't6',
+    quote: "Ordering ceramics online always made me nervous, but AuraNest's wooden crate packaging was flawless. Arrived in 100% mint condition.",
+    author: "Aarav Bhatia",
+    location: "Gurgaon",
+    role: "Product Designer",
+    rating: 5,
+    verified: true,
+    productPurchased: "Banswara Marble Tray",
+    avatarBg: "bg-blue-800/20 text-blue-800",
+    avatarInitials: "AB"
   }
 ];

@@ -14,6 +14,7 @@ import { ShopView } from './components/ShopView';
 import { ProductDetailView } from './components/ProductDetailView';
 import { CartView } from './components/CartView';
 import { CheckoutView } from './components/CheckoutView';
+import { AIImageGeneratorModal } from './components/AIImageGeneratorModal';
 
 import {
   AboutUsView,
@@ -43,6 +44,15 @@ export default function App() {
 
   // Toasts state
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+  // AI Staging Studio state
+  const [isAIStudioOpen, setIsAIStudioOpen] = useState(false);
+  const [aiStudioProduct, setAiStudioProduct] = useState<Product | undefined>(undefined);
+
+  const handleOpenAIStudio = (product?: Product) => {
+    setAiStudioProduct(product || selectedProduct || PRODUCTS[0]);
+    setIsAIStudioOpen(true);
+  };
 
   // Scroll to top on route change
   useEffect(() => {
@@ -165,6 +175,7 @@ export default function App() {
         wishlistCount={wishlist.length}
         onOpenCartDrawer={() => setIsCartDrawerOpen(true)}
         onOpenCategoryDrawer={() => setIsCategoryDrawerOpen(true)}
+        onOpenAIStudio={() => handleOpenAIStudio()}
       />
 
       {/* 2. Main content view transitions */}
@@ -184,6 +195,7 @@ export default function App() {
                 wishlist={wishlist}
                 onToggleWishlist={handleToggleWishlist}
                 onAddToCart={(prod, fin) => handleAddToCart(prod, fin, 1)}
+                onOpenAIStudio={handleOpenAIStudio}
               />
             )}
 
@@ -194,6 +206,7 @@ export default function App() {
                 onToggleWishlist={handleToggleWishlist}
                 onAddToCart={(prod, fin) => handleAddToCart(prod, fin, 1)}
                 onViewDetails={(prod) => handleNavigate('product-detail', prod)}
+                onOpenAIStudio={handleOpenAIStudio}
               />
             )}
 
@@ -205,6 +218,8 @@ export default function App() {
                 onAddToCart={handleAddToCart}
                 onNavigate={handleNavigate}
                 onBackToCatalogue={() => handleNavigate('shop')}
+                onShareNotification={triggerToast}
+                onOpenAIStudio={handleOpenAIStudio}
               />
             )}
 
@@ -213,6 +228,7 @@ export default function App() {
                 cartItems={cart}
                 onUpdateQuantity={handleUpdateCartQuantity}
                 onRemoveItem={handleRemoveFromCart}
+                onAddToCart={(prod, fin, q) => handleAddToCart(prod, fin, q || 1)}
                 onCheckout={() => handleNavigate('checkout')}
                 onBackToShop={() => handleNavigate('shop')}
                 promoCode={promoCode}
@@ -329,6 +345,13 @@ export default function App() {
           setSelectedCategory(categoryId);
           handleNavigate('shop');
         }}
+      />
+
+      {/* AI Staging Image Studio Modal for All Products */}
+      <AIImageGeneratorModal
+        isOpen={isAIStudioOpen}
+        onClose={() => setIsAIStudioOpen(false)}
+        initialProduct={aiStudioProduct}
       />
 
       {/* 5. Custom micro-toast snackbars */}

@@ -1,12 +1,14 @@
 import { useState, useMemo, FormEvent } from 'react';
 import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, Sparkles, MapPin, CheckCircle2 } from 'lucide-react';
-import { CartItem } from '../types';
+import { CartItem, Product } from '../types';
 import { AuraSVG } from './AuraArt';
+import { FrequentlyBoughtTogether } from './FrequentlyBoughtTogether';
 
 interface CartViewProps {
   cartItems: CartItem[];
   onUpdateQuantity: (productId: string, finish: string, delta: number) => void;
   onRemoveItem: (productId: string, finish: string) => void;
+  onAddToCart?: (product: Product, finish: string, quantity?: number) => void;
   onCheckout: () => void;
   onBackToShop: () => void;
   promoCode: string;
@@ -20,6 +22,7 @@ export function CartView({
   cartItems,
   onUpdateQuantity,
   onRemoveItem,
+  onAddToCart,
   onCheckout,
   onBackToShop,
   promoCode,
@@ -200,6 +203,17 @@ export function CartView({
                 ← Continue Adding Coordinates
               </button>
             </div>
+
+            {/* Frequently Bought Together Bundle recommendations in Cart */}
+            {cartItems.length > 0 && onAddToCart && (
+              <div className="pt-4">
+                <FrequentlyBoughtTogether
+                  currentProduct={cartItems[0].product}
+                  onAddToCart={(prod, fin, q) => onAddToCart(prod, fin, q)}
+                  onToastNotification={(msg) => onSuccessToast(msg)}
+                />
+              </div>
+            )}
 
           </div>
 

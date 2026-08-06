@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, Map, Compass, ShieldCheck, CornerRightUp, ChevronRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Map, Compass, ShieldCheck, CornerRightUp, ChevronRight, Star, CheckCircle2, Quote, ChevronLeft, MessageSquareQuote, ThumbsUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Product } from '../types';
 import { PRODUCTS, TESTIMONIALS } from '../data';
@@ -12,6 +12,7 @@ interface HomeViewProps {
   wishlist: string[];
   onToggleWishlist: (product: Product) => void;
   onAddToCart: (product: Product, finish: string) => void;
+  onOpenAIStudio?: (product: Product) => void;
 }
 
 export function HomeView({
@@ -19,7 +20,8 @@ export function HomeView({
   onSelectCategory,
   wishlist,
   onToggleWishlist,
-  onAddToCart
+  onAddToCart,
+  onOpenAIStudio
 }: HomeViewProps) {
   const [testimonialIdx, setTestimonialIdx] = useState(0);
 
@@ -362,6 +364,7 @@ export function HomeView({
               onToggleWishlist={onToggleWishlist}
               onAddToCart={onAddToCart}
               onViewDetails={(prod) => onNavigate('product-detail', prod)}
+              onOpenAIStudio={onOpenAIStudio}
             />
           ))}
         </div>
@@ -434,50 +437,205 @@ export function HomeView({
         </div>
       </section>
 
-      {/* 7. CUSTOMER TESTIMONIAL CAROUSEL (Auto-rotating with Dot Nav) */}
-      <section className="bg-charcoal text-ivory py-16 md:py-20 border-y border-charcoal">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
-          <span className="text-[10px] text-terracotta uppercase tracking-widest font-mono font-bold">The Nest Community</span>
+      {/* 7. CUSTOMER TESTIMONIALS & REVIEWS SHOWCASE */}
+      <section className="bg-gradient-to-b from-[#1C1A18] via-[#242220] to-[#1C1A18] text-ivory py-16 md:py-24 border-y border-charcoal/80 relative overflow-hidden" id="testimonials-section">
+        {/* Background ambient lighting accents */}
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-terracotta/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10 space-y-12">
           
-          <div className="relative h-44 sm:h-36 flex items-center justify-center overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={testimonialIdx}
-                initial={{ opacity: 0, scale: 0.95, y: 15 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95, y: -15 }}
-                transition={{ duration: 0.4 }}
-                className="absolute inset-x-0"
-              >
-                <p className="font-serif text-lg sm:text-2xl italic leading-relaxed max-w-3xl mx-auto text-white">
-                  “{TESTIMONIALS[testimonialIdx].quote}”
-                </p>
-                <div className="mt-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-terracotta">
-                    {TESTIMONIALS[testimonialIdx].author}
-                  </p>
-                  <p className="text-[10px] text-white/40 font-mono mt-0.5">
-                    {TESTIMONIALS[testimonialIdx].role}
-                  </p>
+          {/* Header & Rating Metric */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 bg-terracotta/20 text-terracotta border border-terracotta/30 px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest">
+                <MessageSquareQuote size={12} />
+                <span>Verified Customer Stories</span>
+              </div>
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+                Loved in <span className="italic text-terracotta font-serif">1,200+</span> Sanctuaries Across India
+              </h2>
+              <p className="text-xs sm:text-sm text-white/70 max-w-xl font-sans">
+                Read how interior stylists, architects, and homeowners style their spaces with AuraNest's organic decor.
+              </p>
+            </div>
+
+            {/* Overall Rating Pill & Controls */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-3 backdrop-blur-sm">
+                <div className="flex text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={16} fill="currentColor" className="text-amber-400" />
+                  ))}
                 </div>
-              </motion.div>
-            </AnimatePresence>
+                <div>
+                  <div className="flex items-center gap-1.5 font-serif font-bold text-white text-base">
+                    <span>4.9 / 5.0</span>
+                    <span className="text-xs font-sans text-white/50 font-normal">(1,240+ reviews)</span>
+                  </div>
+                  <p className="text-[10px] text-white/60 font-mono">99.4% Verified Satisfaction Rate</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Carousel Dots indicator */}
-          <div className="flex justify-center gap-2.5 pt-4">
-            {TESTIMONIALS.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setTestimonialIdx(idx)}
-                className={`w-2.5 h-2.5 rounded-full transition-all focus:outline-none ${
-                  testimonialIdx === idx ? 'bg-terracotta w-6' : 'bg-white/20 hover:bg-white/40'
-                }`}
-                aria-label={`Go to testimonial slide ${idx + 1}`}
-                id={`testimonial-dot-${idx}`}
-              />
-            ))}
+          {/* Testimonial Spotlight Carousel */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            {/* Featured Highlight Card (Left/Center Column) */}
+            <div className="lg:col-span-8 bg-white/5 border border-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-10 relative overflow-hidden min-h-[300px] flex flex-col justify-between shadow-2xl">
+              <div className="absolute top-6 right-8 text-white/10 pointer-events-none">
+                <Quote size={80} />
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={testimonialIdx}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.35 }}
+                  className="space-y-6 relative z-10"
+                >
+                  {/* Stars & Verified badge */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-amber-400">
+                      {[...Array(TESTIMONIALS[testimonialIdx].rating || 5)].map((_, i) => (
+                        <Star key={i} size={15} fill="currentColor" />
+                      ))}
+                    </div>
+                    {TESTIMONIALS[testimonialIdx].verified && (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-wider text-sage bg-sage/15 border border-sage/30 px-2.5 py-0.5 rounded-full">
+                        <CheckCircle2 size={11} />
+                        <span>Verified Buyer</span>
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Quote Text */}
+                  <blockquote className="font-serif text-lg sm:text-2xl text-white italic leading-relaxed">
+                    “{TESTIMONIALS[testimonialIdx].quote}”
+                  </blockquote>
+
+                  {/* Author Details & Product Tag */}
+                  <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-11 h-11 rounded-full font-serif font-extrabold text-sm flex items-center justify-center shrink-0 border border-white/20 ${TESTIMONIALS[testimonialIdx].avatarBg || 'bg-terracotta/20 text-terracotta'}`}>
+                        {TESTIMONIALS[testimonialIdx].avatarInitials || TESTIMONIALS[testimonialIdx].author.substring(0, 2).toUpperCase()}
+                      </div>
+                      <div>
+                        <h4 className="font-serif font-bold text-white text-base">
+                          {TESTIMONIALS[testimonialIdx].author}
+                        </h4>
+                        <p className="text-xs text-white/60 font-sans">
+                          {TESTIMONIALS[testimonialIdx].role} • <span className="text-white/80">{TESTIMONIALS[testimonialIdx].location}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    {TESTIMONIALS[testimonialIdx].productPurchased && (
+                      <div className="bg-white/10 hover:bg-white/20 transition-colors px-3 py-1.5 rounded-full text-[11px] font-mono font-medium text-white/90 border border-white/10 flex items-center gap-1.5">
+                        <span className="text-terracotta">Purchased:</span>
+                        <span>{TESTIMONIALS[testimonialIdx].productPurchased}</span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation Arrows & Counter */}
+              <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between relative z-10">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono text-terracotta font-bold">
+                    0{testimonialIdx + 1}
+                  </span>
+                  <span className="text-xs font-mono text-white/30">/</span>
+                  <span className="text-xs font-mono text-white/50">
+                    0{TESTIMONIALS.length}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setTestimonialIdx((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)}
+                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-terracotta text-white flex items-center justify-center transition-all cursor-pointer focus:outline-none"
+                    aria-label="Previous testimonial"
+                    id="prev-testimonial-btn"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={() => setTestimonialIdx((prev) => (prev + 1) % TESTIMONIALS.length)}
+                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-terracotta text-white flex items-center justify-center transition-all cursor-pointer focus:outline-none"
+                    aria-label="Next testimonial"
+                    id="next-testimonial-btn"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick List Cards (Right Column) */}
+            <div className="lg:col-span-4 space-y-3">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-widest text-white/50 mb-2">
+                Select Customer Review
+              </h4>
+              
+              <div className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1 scrollbar-thin">
+                {TESTIMONIALS.map((t, idx) => (
+                  <button
+                    key={t.id || idx}
+                    onClick={() => setTestimonialIdx(idx)}
+                    className={`w-full text-left p-3.5 rounded-2xl border transition-all cursor-pointer focus:outline-none flex items-start gap-3 ${
+                      testimonialIdx === idx
+                        ? 'bg-terracotta/20 border-terracotta text-white shadow-md'
+                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/70'
+                    }`}
+                    id={`testimonial-item-${idx}`}
+                  >
+                    <div className={`w-8 h-8 rounded-full text-xs font-bold font-serif flex items-center justify-center shrink-0 ${t.avatarBg || 'bg-white/10 text-white'}`}>
+                      {t.avatarInitials || t.author.substring(0, 2)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="font-serif font-bold text-xs text-white truncate">{t.author}</span>
+                        <div className="flex text-amber-400 shrink-0">
+                          <Star size={10} fill="currentColor" />
+                          <span className="text-[10px] font-mono text-white/80 ml-0.5">5.0</span>
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-white/60 font-sans line-clamp-1 mt-0.5">
+                        {t.quote}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
           </div>
+
+          {/* Bottom Trust Indicators */}
+          <div className="pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-xs text-white/60 font-sans">
+            <div className="flex items-center justify-center gap-2">
+              <ThumbsUp size={14} className="text-terracotta shrink-0" />
+              <span>100% Authentic Customer Reviews</span>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <CheckCircle2 size={14} className="text-sage shrink-0" />
+              <span>Verified Buyers from 40+ Cities</span>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <ShieldCheck size={14} className="text-amber-400 shrink-0" />
+              <span>Damage-Free Crate Guarantee</span>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <Sparkles size={14} className="text-terracotta shrink-0" />
+              <span>4.9 Star Average Rating</span>
+            </div>
+          </div>
+
         </div>
       </section>
 

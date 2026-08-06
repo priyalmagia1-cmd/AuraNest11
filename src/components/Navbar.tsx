@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, Heart, ShoppingBag, Menu, X, ArrowRight, CornerDownRight } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, X, ArrowRight, CornerDownRight, Sparkles, TrendingUp, Tag, SlidersHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Product, ActiveView } from '../types';
 import { PRODUCTS } from '../data';
@@ -12,6 +12,7 @@ interface NavbarProps {
   wishlistCount: number;
   onOpenCartDrawer: () => void;
   onOpenCategoryDrawer: () => void;
+  onOpenAIStudio?: () => void;
 }
 
 export function Navbar({
@@ -20,7 +21,8 @@ export function Navbar({
   cartCount,
   wishlistCount,
   onOpenCartDrawer,
-  onOpenCategoryDrawer
+  onOpenCategoryDrawer,
+  onOpenAIStudio
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -148,9 +150,23 @@ export function Navbar({
 
           {/* Desktop Navigation Links removed per request */}
 
-          {/* Action icons (Search, Wishlist, Cart) */}
-          <div className="flex items-center gap-2 md:gap-4">
+          {/* Action icons (AI Studio, Search, Wishlist, Cart) */}
+          <div className="flex items-center gap-2 md:gap-3">
             
+            {/* AI Image Studio Button */}
+            {onOpenAIStudio && (
+              <button
+                onClick={onOpenAIStudio}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-terracotta to-amber-700 hover:from-charcoal hover:to-charcoal text-white font-serif font-bold text-xs shadow-xs hover:shadow-md transition-all cursor-pointer border border-amber-300/30 hover:scale-105"
+                title="AI Décor Staging Studio (1K, 2K, 4K Resolution)"
+                id="ai-studio-navbar-btn"
+              >
+                <Sparkles size={14} className="text-amber-200" />
+                <span className="hidden sm:inline">AI Studio</span>
+                <span className="bg-white/20 text-white text-[9px] font-mono px-1.5 py-0.2 rounded-full font-extrabold">4K</span>
+              </button>
+            )}
+
             {/* Search Icon button */}
             <div className="relative" ref={searchContainerRef}>
               <button
@@ -164,78 +180,168 @@ export function Navbar({
                 <Search size={20} />
               </button>
 
-              {/* Inline Search Dropdown Box */}
+              {/* Inline Smart Search Dropdown Box */}
               <AnimatePresence>
                 {isSearchOpen && (
                   <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 15 }}
-                    className="absolute right-0 mt-3 w-80 md:w-96 bg-white rounded-2xl shadow-xl border border-[#E8DCCB]/50 overflow-hidden z-50 p-4"
+                    className="absolute right-0 mt-3 w-80 md:w-[420px] bg-white rounded-3xl shadow-2xl border border-[#E8DCCB]/60 overflow-hidden z-50 p-4 space-y-4"
                     id="search-dropdown-box"
                   >
                     <div className="relative">
                       <input
                         ref={searchInputRef}
                         type="text"
-                        placeholder="Search mirrors, table lamps, wall art..."
+                        placeholder="Search mirrors, table lamps, brass, vases..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-ivory rounded-xl pl-10 pr-4 py-2.5 text-xs text-charcoal placeholder-charcoal/40 border border-charcoal/10 focus:border-terracotta focus:ring-1 focus:ring-terracotta outline-none"
+                        className="w-full bg-ivory rounded-2xl pl-10 pr-16 py-3 text-xs text-charcoal placeholder-charcoal/40 border border-charcoal/10 focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none font-sans font-medium"
+                        id="smart-search-input-field"
                       />
-                      <Search size={14} className="absolute left-3.5 top-3.5 text-charcoal/40" />
-                      {searchQuery && (
+                      <Search size={16} className="absolute left-3.5 top-3.5 text-terracotta" />
+                      {searchQuery ? (
                         <button
                           onClick={() => {
                             setSearchQuery('');
                             setSearchResults([]);
                           }}
-                          className="absolute right-3 top-3 text-[10px] text-charcoal/50 uppercase font-mono tracking-wider font-semibold hover:text-terracotta"
+                          className="absolute right-3 top-2.5 text-[10px] text-charcoal/50 uppercase font-mono tracking-wider font-semibold hover:text-terracotta bg-beige/40 px-2 py-1 rounded-md"
                         >
                           Clear
                         </button>
+                      ) : (
+                        <span className="absolute right-3 top-3 text-[10px] text-charcoal/40 font-mono">
+                          ESC
+                        </span>
                       )}
                     </div>
 
-                    {/* Search Results list */}
-                    <div className="mt-4 max-h-64 overflow-y-auto divide-y divide-[#E8DCCB]/20">
-                      {searchQuery.trim().length < 2 ? (
-                        <div className="p-3 text-center text-xs text-charcoal/50 font-sans">
-                          Type at least 2 characters to search...
-                        </div>
-                      ) : searchResults.length === 0 ? (
-                        <div className="p-4 text-center text-xs text-charcoal/50 font-sans">
-                          No decor matches "<strong>{searchQuery}</strong>"
-                        </div>
-                      ) : (
-                        searchResults.map((product) => (
-                          <div
-                            key={product.id}
-                            onClick={() => {
-                              setIsSearchOpen(false);
-                              setSearchQuery('');
-                              setSearchResults([]);
-                              onNavigate('product-detail', product);
-                            }}
-                            className="p-3 flex items-center gap-3 hover:bg-beige/25 rounded-xl cursor-pointer transition-colors group/item"
-                            id={`search-result-${product.id}`}
-                          >
-                            <div className="w-10 h-10 bg-[#E8DCCB]/30 rounded-lg overflow-hidden p-1 flex items-center justify-center shrink-0">
-                              <AuraSVG type={product.imageType} className="w-full h-full object-contain" />
-                            </div>
-                            <div className="flex-grow min-w-0">
-                              <h4 className="font-serif text-xs font-semibold text-charcoal truncate group-hover/item:text-terracotta transition-colors">
-                                {product.name}
-                              </h4>
-                              <p className="text-[10px] text-charcoal/50 truncate font-sans">
-                                in {product.category.replace('-', ' ')} · ₹{product.price.toLocaleString('en-IN')}
-                              </p>
-                            </div>
-                            <CornerDownRight size={14} className="text-charcoal/30 group-hover/item:text-terracotta group-hover/item:translate-x-1 transition-all shrink-0" />
+                    {/* Zero State: Frequently Searched & Popular Categories Suggestions */}
+                    {searchQuery.trim().length === 0 && (
+                      <div className="space-y-4 pt-1 pb-2">
+                        {/* Popular Searches */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-charcoal/50 uppercase tracking-wider">
+                            <TrendingUp size={12} className="text-terracotta" />
+                            <span>Trending Searches</span>
                           </div>
-                        ))
-                      )}
-                    </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {['Arch Mirror', 'Terracotta Vase', 'Brass Sconce', 'Minimalist Lamp', 'Ceramic Tableware'].map((term) => (
+                              <button
+                                key={term}
+                                onClick={() => setSearchQuery(term)}
+                                className="text-xs bg-beige/40 hover:bg-terracotta hover:text-white text-charcoal/80 px-3 py-1.5 rounded-full border border-charcoal/10 transition-colors cursor-pointer"
+                              >
+                                {term}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Quick Filter Shortcuts */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-charcoal/50 uppercase tracking-wider">
+                            <SlidersHorizontal size={12} className="text-terracotta" />
+                            <span>Filter Shortcuts</span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            <button
+                              onClick={() => {
+                                setSearchQuery('Under ₹3000');
+                                const under = PRODUCTS.filter(p => p.price <= 3000);
+                                setSearchResults(under);
+                              }}
+                              className="p-2 rounded-xl bg-ivory hover:bg-beige/40 text-charcoal/80 border border-[#E8DCCB] text-left font-sans flex items-center justify-between"
+                            >
+                              <span>Under ₹3,000</span>
+                              <Tag size={12} className="text-terracotta" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSearchQuery('Lighting');
+                              }}
+                              className="p-2 rounded-xl bg-ivory hover:bg-beige/40 text-charcoal/80 border border-[#E8DCCB] text-left font-sans flex items-center justify-between"
+                            >
+                              <span>Lighting Collection</span>
+                              <Sparkles size={12} className="text-amber-500" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Active Search Results with Category Smart Suggestions */}
+                    {searchQuery.trim().length > 0 && (
+                      <div className="space-y-3 max-h-80 overflow-y-auto">
+                        
+                        {/* Auto-suggest Tag Suggestions */}
+                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                          <span className="text-[10px] font-mono text-charcoal/40 uppercase font-bold shrink-0">Matches:</span>
+                          {['Ceramics', 'Brass Finish', 'Living Room', 'Artisanal'].map((tag) => (
+                            <button
+                              key={tag}
+                              onClick={() => setSearchQuery(tag)}
+                              className="text-[10px] bg-sage/10 hover:bg-sage hover:text-white text-sage px-2.5 py-1 rounded-full border border-sage/20 shrink-0 font-bold transition-colors cursor-pointer"
+                            >
+                              #{tag}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Product Results list */}
+                        <div className="divide-y divide-[#E8DCCB]/30">
+                          {searchResults.length === 0 ? (
+                            <div className="p-6 text-center space-y-2">
+                              <p className="text-xs text-charcoal/60 font-sans">
+                                No decor pieces matching "<strong>{searchQuery}</strong>"
+                              </p>
+                              <button
+                                onClick={() => setSearchQuery('')}
+                                className="text-xs text-terracotta font-serif font-bold hover:underline"
+                              >
+                                View All Products
+                              </button>
+                            </div>
+                          ) : (
+                            searchResults.map((product) => (
+                              <div
+                                key={product.id}
+                                onClick={() => {
+                                  setIsSearchOpen(false);
+                                  setSearchQuery('');
+                                  setSearchResults([]);
+                                  onNavigate('product-detail', product);
+                                }}
+                                className="p-2.5 flex items-center gap-3 hover:bg-beige/30 rounded-2xl cursor-pointer transition-colors group/item"
+                                id={`search-result-${product.id}`}
+                              >
+                                <div className="w-12 h-12 bg-ivory rounded-xl border border-[#E8DCCB] p-1 flex items-center justify-center shrink-0">
+                                  <AuraSVG type={product.imageType} className="w-full h-full object-contain" />
+                                </div>
+                                <div className="flex-grow min-w-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <h4 className="font-serif text-xs font-bold text-charcoal truncate group-hover/item:text-terracotta transition-colors">
+                                      {product.name}
+                                    </h4>
+                                    {product.price < 4000 && (
+                                      <span className="bg-sage/15 text-sage text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full">
+                                        Value Pick
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[10px] text-charcoal/60 truncate font-sans">
+                                    {product.category.replace('-', ' ')} · <span className="font-bold text-charcoal">₹{product.price.toLocaleString('en-IN')}</span>
+                                  </p>
+                                </div>
+                                <CornerDownRight size={14} className="text-charcoal/30 group-hover/item:text-terracotta group-hover/item:translate-x-1 transition-all shrink-0" />
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
